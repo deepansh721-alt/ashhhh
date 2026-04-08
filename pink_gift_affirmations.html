@@ -1,0 +1,111 @@
+
+<style>
+  .page { background: linear-gradient(135deg, #fce4ec, #f8bbd0, #fce4ec); min-height: 100vh; padding: 2rem 1rem; font-family: var(--font-sans); }
+  .title { text-align: center; font-size: 26px; font-weight: 500; color: #880e4f; margin-bottom: 0.4rem; }
+  .subtitle { text-align: center; font-size: 14px; color: #ad1457; margin-bottom: 2rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; max-width: 700px; margin: 0 auto; }
+  .gift-wrap { perspective: 600px; }
+  .gift { width: 100%; aspect-ratio: 1; cursor: pointer; position: relative; transform-style: preserve-3d; transition: transform 0.6s ease; border-radius: 12px; }
+  .gift.open { transform: rotateY(180deg); }
+  .front, .back {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden; border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 12px; box-sizing: border-box;
+  }
+  .front { background: #f48fb1; border: 2px solid #f06292; }
+  .back { background: #fce4ec; border: 2px solid #f48fb1; transform: rotateY(180deg); }
+  .box-body { width: 70%; height: 55%; background: #e91e8c; border-radius: 6px; position: relative; margin-top: 12px; }
+  .box-lid { width: 80%; height: 22%; background: #c2185b; border-radius: 6px 6px 0 0; position: relative; }
+  .ribbon-h { position: absolute; top: 50%; left: 0; right: 0; height: 10%; background: #fff0f5; transform: translateY(-50%); opacity: 0.7; }
+  .ribbon-v { position: absolute; top: 0; bottom: 0; left: 50%; width: 10%; background: #fff0f5; transform: translateX(-50%); opacity: 0.7; }
+  .bow { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 36px; height: 20px; }
+  .bow-left, .bow-right {
+    position: absolute; width: 16px; height: 16px;
+    background: #fff0f5; border-radius: 50% 0 50% 0;
+    top: 0;
+  }
+  .bow-left { left: 2px; transform: rotate(-30deg); }
+  .bow-right { right: 2px; transform: rotate(30deg) scaleX(-1); }
+  .affirmation { font-size: 13px; color: #880e4f; text-align: center; line-height: 1.5; font-weight: 500; }
+  .heart { font-size: 22px; margin-bottom: 6px; }
+  .tap-hint { font-size: 11px; color: #ad1457; margin-top: 8px; opacity: 0.7; }
+  .reset-btn { display: block; margin: 2rem auto 0; padding: 10px 28px; background: #e91e8c; color: white; border: none; border-radius: 24px; font-size: 14px; cursor: pointer; font-family: var(--font-sans); }
+  .reset-btn:hover { background: #c2185b; }
+</style>
+
+<div class="page">
+  <h1 class="title">✨ Your Gift Box of Affirmations</h1>
+  <p class="subtitle">Click any gift to open it and find your message inside 💝</p>
+  <div class="grid" id="grid"></div>
+  <button class="reset-btn" onclick="resetAll()">Wrap them again 🎀</button>
+</div>
+
+<script>
+const affirmations = [
+  "You are enough, exactly as you are.",
+  "Your kindness makes the world brighter.",
+  "You are capable of amazing things.",
+  "You deserve all the love you give to others.",
+  "Your smile can light up any room.",
+  "You are stronger than you know.",
+  "Today is full of beautiful possibilities for you.",
+  "You bring something unique and irreplaceable to this world.",
+  "You are worthy of good things.",
+  "Your presence is a gift to everyone around you.",
+  "You are growing every single day.",
+  "You have the power to create your own happiness."
+];
+
+const colors = [
+  ['#f48fb1','#e91e8c','#c2185b'],
+  ['#f06292','#e91e63','#ad1457'],
+  ['#ff80ab','#ff4081','#c51162'],
+  ['#f8bbd0','#f48fb1','#ec407a'],
+  ['#fce4ec','#f48fb1','#e91e8c'],
+  ['#ff94c2','#f50057','#b0003a'],
+];
+
+function renderGifts() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  affirmations.forEach((aff, i) => {
+    const c = colors[i % colors.length];
+    const wrap = document.createElement('div');
+    wrap.className = 'gift-wrap';
+    wrap.innerHTML = `
+      <div class="gift" id="gift-${i}" onclick="openGift(${i})">
+        <div class="front" style="background:${c[0]};border-color:${c[1]};">
+          <div class="box-lid" style="background:${c[2]};">
+            <div class="ribbon-h"></div>
+            <div class="ribbon-v"></div>
+            <div class="bow">
+              <div class="bow-left" style="background:${c[0]};"></div>
+              <div class="bow-right" style="background:${c[0]};"></div>
+            </div>
+          </div>
+          <div class="box-body" style="background:${c[1]};">
+            <div class="ribbon-h"></div>
+            <div class="ribbon-v"></div>
+          </div>
+          <p class="tap-hint">tap to open</p>
+        </div>
+        <div class="back">
+          <div class="heart">💖</div>
+          <p class="affirmation">${aff}</p>
+        </div>
+      </div>`;
+    grid.appendChild(wrap);
+  });
+}
+
+function openGift(i) {
+  document.getElementById('gift-' + i).classList.toggle('open');
+}
+
+function resetAll() {
+  document.querySelectorAll('.gift').forEach(g => g.classList.remove('open'));
+}
+
+renderGifts();
+</script>
